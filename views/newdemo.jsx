@@ -6,8 +6,8 @@ import recognizeMicrophone from 'watson-speech/speech-to-text/recognize-micropho
 import recognizeFile from 'watson-speech/speech-to-text/recognize-file';
 
 import ModelDropdown from './model-dropdown.jsx';
-import Transcript from './transcript.jsx';
-import { Keywords, getKeywordsSummary } from './keywords.jsx';
+// import Transcript from './transcript.jsx';
+// import { Keywords, getKeywordsSummary } from './keywords.jsx';
 import SpeakersView from './speaker.jsx';
 import TimingView from './timing.jsx';
 import JSONView from './json-view.jsx';
@@ -29,13 +29,13 @@ export default React.createClass({
       formattedMessages: [],
       audioSource: null,
       speakerLabels: true,
-      keywords: this.getKeywords('en-US_BroadbandModel'),
+      // keywords: this.getKeywords('en-US_BroadbandModel'),
       // transcript model and keywords are the state that they were when the button was clicked.
       // Changing them during a transcription would cause a mismatch between the setting sent to the
       // service and what is displayed on the demo, and could cause bugs.
       settingsAtStreamStart: {
         model: '',
-        keywords: [],
+        // keywords: [],
         speakerLabels: false,
       },
       error: null,
@@ -57,7 +57,7 @@ export default React.createClass({
     this.setState({
       settingsAtStreamStart: {
         model: this.state.model,
-        keywords: this.getKeywordsArrUnique(),
+        // keywords: this.getKeywordsArrUnique(),
         speakerLabels: this.state.speakerLabels,
       },
     });
@@ -73,7 +73,7 @@ export default React.createClass({
   },
 
   getRecognizeOptions(extra) {
-    const keywords = this.getKeywordsArrUnique();
+    // const keywords = this.getKeywordsArrUnique();
     return Object.assign({
       // formats phone numbers, currency, etc. (server-side)
       token: this.state.token,
@@ -84,10 +84,10 @@ export default React.createClass({
       interim_results: true,
       // note: in normal usage, you'd probably set this a bit higher
       word_alternatives_threshold: 0.01,
-      keywords,
-      keywords_threshold: keywords.length
-        ? 0.01
-        : undefined, // note: in normal usage, you'd probably set this a bit higher
+      // keywords,
+      // keywords_threshold: keywords.length
+      //   ? 0.01
+      //   : undefined, // note: in normal usage, you'd probably set this a bit higher
       timestamps: true, // set timestamps for each word - automatically turned on by speaker_labels
       // includes the speaker_labels in separate objects unless resultsBySpeaker is enabled
       speaker_labels: this.state.speakerLabels,
@@ -274,18 +274,18 @@ export default React.createClass({
       .then(token => this.setState({ token })).catch(this.handleError);
   },
 
-  getKeywords(model) {
-    // a few models have more than two sample files, but the demo can only handle
-    // two samples at the moment
-    // so this just takes the keywords from the first two samples
-    const files = samples[model];
-    return (files && files.length >= 2 && `${files[0].keywords}, ${files[1].keywords}`) || '';
-  },
+  // getKeywords(model) {
+  //   // a few models have more than two sample files, but the demo can only handle
+  //   // two samples at the moment
+  //   // so this just takes the keywords from the first two samples
+  //   const files = samples[model];
+  //   return (files && files.length >= 2 && `${files[0].keywords}, ${files[1].keywords}`) || '';
+  // },
 
   handleModelChange(model) {
     this.reset();
     this.setState({ model,
-      keywords: this.getKeywords(model),
+      // keywords: this.getKeywords(model),
       speakerLabels: this.supportsSpeakerLabels(model) });
 
     // clear the microphone narrowband error if it's visible and a broadband model was just selected
@@ -312,27 +312,27 @@ export default React.createClass({
     });
   },
 
-  handleKeywordsChange(e) {
-    this.setState({ keywords: e.target.value });
-  },
+  // handleKeywordsChange(e) {
+  //   this.setState({ keywords: e.target.value });
+  // },
 
-  // cleans up the keywords string into an array of individual, trimmed, non-empty keywords/phrases
-  getKeywordsArr() {
-    return this.state.keywords.split(',').map(k => k.trim()).filter(k => k);
-  },
+  // // cleans up the keywords string into an array of individual, trimmed, non-empty keywords/phrases
+  // getKeywordsArr() {
+  //   return this.state.keywords.split(',').map(k => k.trim()).filter(k => k);
+  // },
 
   // cleans up the keywords string and produces a unique list of keywords
-  getKeywordsArrUnique() {
-    var arr = this.state.keywords.split(',').map(k => k.trim()).filter(k => k);
-    var u = {}, a = [];
-    for(var i = 0, l = arr.length; i < l; ++i){
-        if(!u.hasOwnProperty(arr[i])) {
-            a.push(arr[i]);
-            u[arr[i]] = 1;
-        }
-    }
-    return a;
-  },
+  // getKeywordsArrUnique() {
+  //   var arr = this.state.keywords.split(',').map(k => k.trim()).filter(k => k);
+  //   var u = {}, a = [];
+  //   for(var i = 0, l = arr.length; i < l; ++i){
+  //       if(!u.hasOwnProperty(arr[i])) {
+  //           a.push(arr[i]);
+  //           u[arr[i]] = 1;
+  //       }
+  //   }
+  //   return a;
+  // },
 
   getFinalResults() {
     return this.state.formattedMessages.filter(r => r.results &&
