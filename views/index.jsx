@@ -4,7 +4,7 @@ import Layout from './layout';
 import Watsonbody from './watsonbody';
 
 export default function Index(props) {
-  return (<Layout bluemixAnalytics={props.bluemixAnalytics} ><Watsonbody /></Layout>);
+  return (<Layout><Watsonbody /></Layout>);
 }
 
 Index.defaultProps = {

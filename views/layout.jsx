@@ -15,7 +15,6 @@ export default function Layout(props) {
           {props.children}
         </div>
         <script type="text/javascript" src="scripts/bundle.js" />
-        { props.bluemixAnalytics ? <script type="text/javascript" src="scripts/analytics.js" /> : null }
       </body>
     </html>
   );
@@ -23,5 +22,4 @@ export default function Layout(props) {
 
 Layout.propTypes = {
   children: PropTypes.object.isRequired, // eslint-disable-line
-  bluemixAnalytics: PropTypes.bool.isRequired,
 };
