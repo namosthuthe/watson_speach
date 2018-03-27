@@ -1,12 +1,9 @@
 /* eslint no-param-reassign: 0 */
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import { Icon, Tabs, Pane, Alert } from 'watson-react-components';
 import recognizeMicrophone from 'watson-speech/speech-to-text/recognize-microphone';
 import recognizeFile from 'watson-speech/speech-to-text/recognize-file';
-
 import ModelDropdown from './model-dropdown.jsx';
-
 import Displaymsg from './displaymsg.jsx';
 import Recordbtn from './recordbtn.jsx';
 
@@ -229,9 +226,7 @@ export default React.createClass({
 
     const err = this.state.error
       ? (
-        <Alert type="error" color="red">
           <p>{this.state.error}</p>
-        </Alert>
       )
       : null;
 
