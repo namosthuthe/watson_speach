@@ -8,11 +8,11 @@ import recognizeFile from 'watson-speech/speech-to-text/recognize-file';
 import ModelDropdown from './model-dropdown.jsx';
 // import Transcript from './transcript.jsx';
 // import { Keywords, getKeywordsSummary } from './keywords.jsx';
-import SpeakersView from './speaker.jsx';
-import TimingView from './timing.jsx';
-import JSONView from './json-view.jsx';
-import samples from '../src/data/samples.json';
-import cachedModels from '../src/data/models.json';
+// import SpeakersView from './speaker.jsx';
+// import TimingView from './timing.jsx';
+// import JSONView from './json-view.jsx';
+// import samples from '../src/data/samples.json';
+// import cachedModels from '../src/data/models.json';
 
 import Displaymsg from './displaymsg.jsx';
 import Recordbtn from './recordbtn.jsx';
@@ -28,7 +28,7 @@ export default React.createClass({
       rawMessages: [],
       formattedMessages: [],
       audioSource: null,
-      speakerLabels: true,
+      // speakerLabels: true,
       // keywords: this.getKeywords('en-US_BroadbandModel'),
       // transcript model and keywords are the state that they were when the button was clicked.
       // Changing them during a transcription would cause a mismatch between the setting sent to the
@@ -36,7 +36,7 @@ export default React.createClass({
       settingsAtStreamStart: {
         model: '',
         // keywords: [],
-        speakerLabels: false,
+        // speakerLabels: false,
       },
       error: null,
     };
@@ -58,7 +58,7 @@ export default React.createClass({
       settingsAtStreamStart: {
         model: this.state.model,
         // keywords: this.getKeywordsArrUnique(),
-        speakerLabels: this.state.speakerLabels,
+        // speakerLabels: this.state.speakerLabels,
       },
     });
   },
@@ -90,12 +90,12 @@ export default React.createClass({
       //   : undefined, // note: in normal usage, you'd probably set this a bit higher
       timestamps: true, // set timestamps for each word - automatically turned on by speaker_labels
       // includes the speaker_labels in separate objects unless resultsBySpeaker is enabled
-      speaker_labels: this.state.speakerLabels,
+      // speaker_labels: this.state.speakerLabels,
       // combines speaker_labels and results together into single objects,
       // making for easier transcript outputting
-      resultsBySpeaker: this.state.speakerLabels,
+      // resultsBySpeaker: this.state.speakerLabels,
       // allow interim results through before the speaker has been determined
-      speakerlessInterim: this.state.speakerLabels,
+      // speakerlessInterim: this.state.speakerLabels,
     }, extra);
   },
 
@@ -104,27 +104,27 @@ export default React.createClass({
     return model.indexOf('Narrowband') !== -1;
   },
 
-  handleMicClick() {
-    if (this.state.audioSource === 'mic') {
-      this.stopTranscription();
-      return;
-    }
-    this.reset();
-    this.setState({ audioSource: 'mic' });
+  // handleMicClick() {
+  //   if (this.state.audioSource === 'mic') {
+  //     this.stopTranscription();
+  //     return;
+  //   }
+  //   this.reset();
+  //   this.setState({ audioSource: 'mic' });
 
-    // The recognizeMicrophone() method is a helper method provided by the watson-speech package
-    // It sets up the microphone, converts and downsamples the audio, and then transcribes it
-    // over a WebSocket connection
-    // It also provides a number of optional features, some of which are enabled by default:
-    //  * enables object mode by default (options.objectMode)
-    //  * formats results (Capitals, periods, etc.) (options.format)
-    //  * outputs the text to a DOM element - not used in this demo because it doesn't play nice
-    // with react (options.outputElement)
-    //  * a few other things for backwards compatibility and sane defaults
-    // In addition to this, it passes other service-level options along to the RecognizeStream that
-    // manages the actual WebSocket connection.
-    this.handleStream(recognizeMicrophone(this.getRecognizeOptions()));
-  },
+  //   // The recognizeMicrophone() method is a helper method provided by the watson-speech package
+  //   // It sets up the microphone, converts and downsamples the audio, and then transcribes it
+  //   // over a WebSocket connection
+  //   // It also provides a number of optional features, some of which are enabled by default:
+  //   //  * enables object mode by default (options.objectMode)
+  //   //  * formats results (Capitals, periods, etc.) (options.format)
+  //   //  * outputs the text to a DOM element - not used in this demo because it doesn't play nice
+  //   // with react (options.outputElement)
+  //   //  * a few other things for backwards compatibility and sane defaults
+  //   // In addition to this, it passes other service-level options along to the RecognizeStream that
+  //   // manages the actual WebSocket connection.
+  //   this.handleStream(recognizeMicrophone(this.getRecognizeOptions()));
+  // },
 
   handleUploadClick() {
     console.log("handleUploadClick "+this.state.audioSource);
@@ -157,19 +157,19 @@ export default React.createClass({
   //   this.handleSampleClick(2);
   // },
 
-  handleSampleClick(which) {
-    if (this.state.audioSource === `sample-${which}`) {
-      this.stopTranscription();
-    } else {
-      const filename = samples[this.state.model] && samples[this.state.model][which - 1].filename;
-      if (!filename) {
-        this.handleError(`No sample ${which} available for model ${this.state.model}`, samples[this.state.model]);
-      }
-      this.reset();
-      this.setState({ audioSource: `sample-${which}` });
-      this.playFile(`audio/${filename}`);
-    }
-  },
+  // handleSampleClick(which) {
+  //   if (this.state.audioSource === `sample-${which}`) {
+  //     this.stopTranscription();
+  //   } else {
+  //     const filename = samples[this.state.model] && samples[this.state.model][which - 1].filename;
+  //     if (!filename) {
+  //       this.handleError(`No sample ${which} available for model ${this.state.model}`, samples[this.state.model]);
+  //     }
+  //     this.reset();
+  //     this.setState({ audioSource: `sample-${which}` });
+  //     this.playFile(`audio/${filename}`);
+  //   }
+  // },
 
   /**
    * @param {File|Blob|String} file - url to an audio file or a File
@@ -221,13 +221,13 @@ export default React.createClass({
     });
 
     // grab raw messages from the debugging events for display on the JSON tab
-    stream.recognizeStream
-      .on('message', (frame, json) => this.handleRawMessage({ sent: false, frame, json }))
-      .on('send-json', json => this.handleRawMessage({ sent: true, json }))
-      .once('send-data', () => this.handleRawMessage({
-        sent: true, binary: true, data: true, // discard the binary data to avoid waisting memory
-      }))
-      .on('close', (code, message) => this.handleRawMessage({ close: true, code, message }));
+    // stream.recognizeStream
+    //   .on('message', (frame, json) => this.handleRawMessage({ sent: false, frame, json }))
+    //   .on('send-json', json => this.handleRawMessage({ sent: true, json }))
+    //   .once('send-data', () => this.handleRawMessage({
+    //     sent: true, binary: true, data: true, // discard the binary data to avoid waisting memory
+    //   }))
+    //   .on('close', (code, message) => this.handleRawMessage({ close: true, code, message }));
 
     // ['open','close','finish','end','error', 'pipe'].forEach(e => {
     //     stream.recognizeStream.on(e, console.log.bind(console, 'rs event: ', e));
@@ -235,9 +235,9 @@ export default React.createClass({
     // });
   },
 
-  handleRawMessage(msg) {
-    this.setState({ rawMessages: this.state.rawMessages.concat(msg) });
-  },
+  // handleRawMessage(msg) {
+  //   this.setState({ rawMessages: this.state.rawMessages.concat(msg) });
+  // },
 
   handleFormattedMessage(msg) {
     // console.log("msg "+JSON.stringify(msg));
@@ -286,7 +286,8 @@ export default React.createClass({
     this.reset();
     this.setState({ model,
       // keywords: this.getKeywords(model),
-      speakerLabels: this.supportsSpeakerLabels(model) });
+      // speakerLabels: this.supportsSpeakerLabels(model) 
+    });
 
     // clear the microphone narrowband error if it's visible and a broadband model was just selected
     if (this.state.error === ERR_MIC_NARROWBAND && !this.isNarrowBand(model)) {
@@ -295,22 +296,22 @@ export default React.createClass({
 
     // clear the speaker_lables is not supported error - e.g.
     // speaker_labels is not a supported feature for model en-US_BroadbandModel
-    if (this.state.error && this.state.error.indexOf('speaker_labels is not a supported feature for model') === 0) {
-      this.setState({ error: null });
-    }
+    // if (this.state.error && this.state.error.indexOf('speaker_labels is not a supported feature for model') === 0) {
+    //   this.setState({ error: null });
+    // }
   },
 
-  supportsSpeakerLabels(model) {
-    model = model || this.state.model;
-    // todo: read the upd-to-date models list instead of the cached one
-    return cachedModels.some(m => m.name === model && m.supported_features.speaker_labels);
-  },
+  // supportsSpeakerLabels(model) {
+  //   model = model || this.state.model;
+  //   // todo: read the upd-to-date models list instead of the cached one
+  //   return cachedModels.some(m => m.name === model && m.supported_features.speaker_labels);
+  // },
 
-  handleSpeakerLabelsChange() {
-    this.setState({
-      speakerLabels: !this.state.speakerLabels,
-    });
-  },
+  // handleSpeakerLabelsChange() {
+  //   this.setState({
+  //     speakerLabels: !this.state.speakerLabels,
+  //   });
+  // },
 
   // handleKeywordsChange(e) {
   //   this.setState({ keywords: e.target.value });
@@ -380,24 +381,24 @@ export default React.createClass({
     //   padding: 10px
     // }
     
-    const buttonsEnabled = !!this.state.token;
-    const buttonClass = buttonsEnabled
-      ? 'base--button'
-      : 'base--button base--button_black';
+    // const buttonsEnabled = !!this.state.token;
+    // const buttonClass = buttonsEnabled
+    //   ? 'base--button'
+    //   : 'base--button base--button_black';
 
-    let micIconFill = '#000000';
-    let micButtonClass = buttonClass;
-    if (this.state.audioSource === 'mic') {
-      micButtonClass += ' mic-active';
-      micIconFill = '#FFFFFF';
-    } else if (!recognizeMicrophone.isSupported) {
-      micButtonClass += ' base--button_black';
-    }
+    // let micIconFill = '#000000';
+    // let micButtonClass = buttonClass;
+    // if (this.state.audioSource === 'mic') {
+    //   micButtonClass += ' mic-active';
+    //   micIconFill = '#FFFFFF';
+    // } else if (!recognizeMicrophone.isSupported) {
+    //   micButtonClass += ' base--button_black';
+    // }
 
     const err = this.state.error
       ? (
         <Alert type="error" color="red">
-          <p className="base--p">{this.state.error}</p>
+          <p>{this.state.error}</p>
         </Alert>
       )
       : null;
@@ -430,32 +431,32 @@ export default React.createClass({
           </div>
         </div> */}
 
-        <div className="flex setup">
-          <div className="column">
-
-            <p>Voice Model:
               <ModelDropdown
                 model={this.state.model}
                 token={this.state.token}
                 onChange={this.handleModelChange}
               />
+        {/* <div className="flex setup">
+          <div className="column">
+
+            <p>Voice Model:
             </p>
 
 
           </div>
-        </div>
+        </div> */}
 
 
-        <div className="flex buttons">
+          <button onClick={this.handleUploadClick}>
+            {/* <Icon type={this.state.audioSource === 'upload' ? 'stop' : 'upload'} /> Upload Audio File */}
+            <Recordbtn message={this.state.audioSource === 'upload' ? 'stop' : 'upload'} />
+          </button>
+        {/* <div className="flex buttons"> */}
 
           {/* <button className={micButtonClass} onClick={this.handleMicClick}>
             <Icon type={this.state.audioSource === 'mic' ? 'stop' : 'microphone'} fill={micIconFill} /> Record Audio
           </button> */}
 
-          <button className={buttonClass} onClick={this.handleUploadClick}>
-            {/* <Icon type={this.state.audioSource === 'upload' ? 'stop' : 'upload'} /> Upload Audio File */}
-            <Recordbtn message={this.state.audioSource === 'upload' ? 'stop' : 'upload'} />
-          </button>
 
           {/* <button className={buttonClass} onClick={this.handleSample1Click}>
             <Icon type={this.state.audioSource === 'sample-1' ? 'stop' : 'play'} /> Play Sample 1
@@ -465,7 +466,7 @@ export default React.createClass({
             <Icon type={this.state.audioSource === 'sample-2' ? 'stop' : 'play'} /> Play Sample 2
           </button> */}
 
-        </div>
+        {/* </div> */}
 
         {err}
 
